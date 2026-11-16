@@ -1,0 +1,16 @@
+# sentenças do Exercício 5 (ε representa a sentença vazia)
+
+[aceitar]
+ε
+ab
+ac
+bc
+aabc
+abcc
+
+[rejeitar]
+abc
+aabbcc
+a
+cc
+ba

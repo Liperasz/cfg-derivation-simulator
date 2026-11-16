@@ -1,0 +1,33 @@
+{
+  "name": "Exercício 5",
+  "language": "L₅ = { aⁱbʲcᵏ | i = j + k } ∪ { aⁱbʲcᵏ | k = i + j }",
+  "terminals": ["a", "b", "c"],
+  "start": "S",
+  "original": {
+    "variables": ["S", "A", "C", "B", "D"],
+    "productions": {
+      "S": ["A", "B"],
+      "A": ["aAc", "C"],
+      "C": ["aCb", "ε"],
+      "B": ["aBc", "D"],
+      "D": ["bDc", "ε"]
+    }
+  },
+  "cnf": {
+    "variables": ["S", "A", "C", "B", "D", "E", "F", "G", "H", "X", "Y", "Z"],
+    "productions": {
+      "S": ["XE", "XZ", "XF", "XY", "XG", "YH", "YZ", "ε"],
+      "A": ["XE", "XZ", "XF", "XY"],
+      "C": ["XF", "XY"],
+      "B": ["XG", "XZ", "YH", "YZ"],
+      "D": ["YH", "YZ"],
+      "E": ["AZ"],
+      "F": ["CY"],
+      "G": ["BZ"],
+      "H": ["DZ"],
+      "X": ["a"],
+      "Y": ["b"],
+      "Z": ["c"]
+    }
+  }
+}

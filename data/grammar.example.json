@@ -1,0 +1,23 @@
+{
+  "_comment": "Exemplo: { aⁿbⁿ | n ≥ 0 }. Cada símbolo tem um único caractere e ε representa a cadeia vazia",
+  "name": "Exemplo aⁿbⁿ",
+  "language": "L = { aⁿbⁿ | n ≥ 0 }",
+  "terminals": ["a", "b"],
+  "start": "S",
+  "original": {
+    "variables": ["S"],
+    "productions": {
+      "S": ["aSb", "ε"]
+    }
+  },
+  "cnf": {
+    "variables": ["S", "T", "U", "X", "Y"],
+    "productions": {
+      "S": ["XU", "XY", "ε"],
+      "T": ["XU", "XY"],
+      "U": ["TY"],
+      "X": ["a"],
+      "Y": ["b"]
+    }
+  }
+}
