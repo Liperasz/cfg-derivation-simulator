@@ -15,42 +15,50 @@ O projeto foi feito como trabalho acadêmico: construir a GLC do Exercício 5, s
 ```
 cfg-derivation-simulator/
 ├── main.py
-├── simulator.py
-├── grammar.py
-├── cyk.py
-├── derivation.py
-├── tree_layout.py
-├── input_reader.py
-├── app.py
-├── views.py
-├── widgets.py
-├── theme.py
-├── requirements.txt
+├── core/
+│   ├── simulator.py
+│   ├── grammar.py
+│   ├── cyk.py
+│   ├── derivation.py
+│   ├── tree_layout.py
+│   └── input_reader.py
+├── ui/
+│   ├── app.py
+│   ├── views.py
+│   ├── widgets.py
+│   └── theme.py
 ├── tests/
 │   └── test_cyk.py
-└── data/
-    ├── grammar.json
-    ├── grammar.example.json
-    └── input.txt
+├── data/
+│   ├── grammar.json
+│   ├── grammar.example.json
+│   └── input.txt
+├── docs/
+│   ├── 1-visao-geral.png
+│   └── 2-simulacao-sentenca.png
+└── requirements.txt
 ```
+
+A pasta `core/` tem toda a lógica e não importa pygame. A pasta `ui/` só desenha o que recebe do `Simulator`.
 
 | Arquivo | Descrição |
 |---|---|
 | `main.py` | Ponto de entrada. Lê os argumentos, cria o `Simulator` e abre a janela |
-| `simulator.py` | Classe `Simulator`: junta o back e é a única coisa que a interface usa |
-| `grammar.py` | Classe `Grammar`: carrega, valida, verifica a FNC e formata as regras |
-| `cyk.py` | Algoritmo CYK e reconstrução da árvore de derivação |
-| `derivation.py` | Nó da árvore e derivação mais à esquerda, passo a passo |
-| `tree_layout.py` | Calcula a posição de cada nó da árvore (sem pygame) |
-| `input_reader.py` | Lê o arquivo de sentenças |
-| `app.py` | Classe `App`: janela, loop do pygame, eventos e estado da tela |
-| `views.py` | Desenho de cada tela: gramáticas, árvore, passos e tabela CYK |
-| `widgets.py` | Botões e lista de sentenças |
-| `theme.py` | Cores, fontes e tamanhos da interface |
+| `core/simulator.py` | Classe `Simulator`: junta o back e é a única coisa que a interface usa |
+| `core/grammar.py` | Classe `Grammar`: carrega, valida, verifica a FNC e formata as regras |
+| `core/cyk.py` | Algoritmo CYK e reconstrução da árvore de derivação |
+| `core/derivation.py` | Nó da árvore e derivação mais à esquerda, passo a passo |
+| `core/tree_layout.py` | Calcula a posição de cada nó da árvore (sem pygame) |
+| `core/input_reader.py` | Lê o arquivo de sentenças |
+| `ui/app.py` | Classe `App`: janela, loop do pygame, eventos e estado da tela |
+| `ui/views.py` | Desenho de cada tela: gramáticas, árvore, passos e tabela CYK |
+| `ui/widgets.py` | Botões e lista de sentenças |
+| `ui/theme.py` | Cores, fontes e tamanhos da interface |
 | `tests/test_cyk.py` | Testes do CYK e da linguagem gerada |
 | `data/grammar.json` | Gramática original e na FNC do Exercício 5 |
 | `data/grammar.example.json` | Exemplo (aⁿbⁿ), para criar a sua própria gramática |
 | `data/input.txt` | Sentenças de aceite e rejeite do enunciado |
+| `docs/` | Fluxogramas do funcionamento do programa |
 
 ## Requisitos
 
@@ -101,6 +109,13 @@ Cada sentença da lista mostra o resultado esperado (do arquivo) e o obtido pelo
 | `Esc` | Fecha o programa |
 
 ## Fluxo de execução
+
+O fluxograma 1 mostra o caminho geral do programa, e o fluxograma 2 mostra o que acontece com cada sentença.
+
+![Fluxograma 1 - Visão geral do programa](docs/1-visao-geral.png)
+
+![Fluxograma 2 - Simulação de uma sentença](docs/2-simulacao-sentenca.png)
+
 
 * `main.py` cria o `Simulator`, que carrega as duas gramáticas do JSON, valida e confere se a seção `cnf` está mesmo na FNC. Se algo estiver errado, o programa mostra o erro e não abre a janela.
 * O `Simulator` lê `data/input.txt` e roda o CYK de cada sentença usando a gramática na FNC.
