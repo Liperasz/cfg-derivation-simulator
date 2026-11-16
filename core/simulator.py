@@ -1,8 +1,8 @@
-import cyk
-from derivation import assign_ids, leftmost_steps
-from grammar import load_grammars
-from input_reader import read_sentences
-from tree_layout import compute_layout
+from core import cyk
+from core.derivation import assign_ids, leftmost_steps
+from core.grammar import load_grammars
+from core.input_reader import read_sentences
+from core.tree_layout import compute_layout
 
 
 # junta o back: carrega as gramáticas e as sentenças e simula cada uma

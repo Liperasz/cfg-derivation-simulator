@@ -1,4 +1,4 @@
-from grammar import EPSILON, ARROW
+from core.grammar import EPSILON, ARROW
 
 
 # nó da árvore de derivação (folha = terminal ou ε)

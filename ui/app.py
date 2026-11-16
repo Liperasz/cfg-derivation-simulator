@@ -2,8 +2,8 @@ import os
 
 import pygame
 
-import views
-from theme import (
+from ui import views
+from ui.theme import (
     COLORS,
     CONTROLS_HEIGHT,
     FPS,
@@ -15,7 +15,7 @@ from theme import (
     WINDOW_SIZE,
     load_fonts
 )
-from widgets import Button, SentenceList
+from ui.widgets import Button, SentenceList
 
 TABS = ['Gramáticas', 'Derivação', 'Tabela CYK']
 

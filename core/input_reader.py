@@ -1,4 +1,4 @@
-from grammar import EPSILON
+from core.grammar import EPSILON
 
 SECTIONS = {
     '[aceitar]': True,

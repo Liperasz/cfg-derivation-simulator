@@ -1,5 +1,5 @@
-from derivation import Node
-from grammar import EPSILON
+from core.derivation import Node
+from core.grammar import EPSILON
 
 
 # roda o CYK na palavra e devolve o resultado com a árvore (se existir) e a tabela

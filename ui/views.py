@@ -1,6 +1,6 @@
 import pygame
 
-from theme import COLORS, PADDING
+from ui.theme import COLORS, PADDING
 
 # texto mostrado na tela para cada motivo de rejeição devolvido pelo CYK
 REASONS = {

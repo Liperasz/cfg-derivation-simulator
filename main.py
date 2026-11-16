@@ -2,8 +2,8 @@ import argparse
 import os
 import sys
 
-from app import App
-from simulator import Simulator
+from ui.app import App
+from core.simulator import Simulator
 
 # caminhos relativos ao arquivo, assim o programa roda de qualquer pasta
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

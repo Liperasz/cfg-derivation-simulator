@@ -1,6 +1,6 @@
 import pygame
 
-from theme import COLORS
+from ui.theme import COLORS
 
 RADIUS = 8
 

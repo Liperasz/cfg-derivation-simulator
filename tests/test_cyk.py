@@ -7,9 +7,9 @@ import unittest
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT_DIR)
 
-import cyk
-from grammar import Grammar, load_grammars
-from simulator import Simulator
+from core import cyk
+from core.grammar import Grammar, load_grammars
+from core.simulator import Simulator
 
 GRAMMAR_PATH = os.path.join(ROOT_DIR, 'data', 'grammar.json')
 INPUT_PATH = os.path.join(ROOT_DIR, 'data', 'input.txt')
