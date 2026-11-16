@@ -10,6 +10,7 @@ class Node:
         self.symbol = symbol
         self.children = children or []
 
+    # na árvore final, só terminais e ε ficam sem filhos
     def is_leaf(self):
         return not self.children
 
@@ -18,6 +19,7 @@ class Node:
         body = ''.join(child.symbol for child in self.children if child.symbol != EPSILON) or EPSILON
         return f'{self.symbol} {ARROW} {body}'
 
+    # versão em dicionário da árvore (útil pra depurar ou salvar em json)
     def to_dict(self):
         return {
             'id': self.id,
@@ -29,6 +31,7 @@ class Node:
 # numera os nós em pré-ordem (a numeração é usada pelo front pra animar)
 def assign_ids(root):
 
+    # pilha com os filhos invertidos pra visitar da esquerda pra direita
     nodes = []
     stack = [root]
 
@@ -44,6 +47,7 @@ def assign_ids(root):
 # gera a derivação mais à esquerda, um passo por variável expandida
 def leftmost_steps(root):
 
+    # a forma sentencial é uma lista de nós, então dá pra saber de onde veio cada símbolo
     form = [root]
     visible = {root.id}
     steps = [{
@@ -60,6 +64,7 @@ def leftmost_steps(root):
         if index is None:
             break
 
+        # troca a variável pelos filhos dela e revela os filhos na árvore
         node = form[index]
         form = form[:index] + node.children + form[index + 1:]
         visible.update(child.id for child in node.children)

@@ -2,6 +2,7 @@ import pygame
 
 from theme import COLORS, PADDING
 
+# texto mostrado na tela para cada motivo de rejeição devolvido pelo CYK
 REASONS = {
     'no_derivation': 'não existe derivação a partir de S (S não aparece no topo da tabela CYK)',
     'invalid_symbol': 'a sentença tem um símbolo fora do alfabeto',
@@ -9,11 +10,13 @@ REASONS = {
 }
 
 
+# fundo branco com borda arredondada usado em todos os painéis
 def draw_panel(surface, rect):
     pygame.draw.rect(surface, COLORS['panel'], rect, border_radius=10)
     pygame.draw.rect(surface, COLORS['border'], rect, width=1, border_radius=10)
 
 
+# desenha o texto ancorado no ponto dado (topleft, center, midright...) e devolve o retângulo ocupado
 def draw_text(surface, font, text, position, color=None, anchor='topleft'):
     label = font.render(text, True, color or COLORS['text'])
     rect = label.get_rect(**{anchor: position})
@@ -24,9 +27,11 @@ def draw_text(surface, font, text, position, color=None, anchor='topleft'):
 # tela com a gramática original e a da FNC lado a lado
 def draw_grammars(surface, rect, fonts, grammars):
 
+    # nome do exercício e a linguagem no topo
     title = draw_text(surface, fonts['title'], grammars['name'], (rect.x, rect.y))
     draw_text(surface, fonts['language'], grammars['language'], (rect.x, title.bottom + 6), COLORS['muted'])
 
+    # dois cartões dividindo a largura igualmente
     top = title.bottom + 44
     width = (rect.width - PADDING) // 2
     cards = [
@@ -55,10 +60,12 @@ def draw_grammars(surface, rect, fonts, grammars):
 # quebra "S → XE | XZ | ..." nas barras quando passa da largura
 def _wrap_rule(font, rule, max_width):
 
+    # separa a variável das alternativas, e as linhas seguintes ficam alinhadas embaixo da seta
     head, _, body = rule.partition(' → ')
     options = body.split(' | ')
     indent = ' ' * (len(head) + 1) + '| '
 
+    # vai juntando alternativas na linha até não caber mais
     lines = []
     current = f'{head} → {options[0]}'
     for option in options[1:]:
@@ -76,6 +83,7 @@ def _wrap_rule(font, rule, max_width):
 # tela da derivação: árvore à esquerda e passos à direita
 def draw_derivation(surface, rect, fonts, result, step_index):
 
+    # a lista de passos tem largura fixa e a árvore fica com o resto
     steps_width = 300
     tree_rect = pygame.Rect(rect.x, rect.y, rect.width - steps_width - PADDING, rect.height)
     steps_rect = pygame.Rect(tree_rect.right + PADDING, rect.y, steps_width, rect.height)
@@ -83,6 +91,7 @@ def draw_derivation(surface, rect, fonts, result, step_index):
     draw_panel(surface, tree_rect)
     draw_panel(surface, steps_rect)
 
+    # sentença rejeitada não tem árvore, só a mensagem com o motivo
     if not result['accepted']:
         _draw_rejected(surface, tree_rect, fonts, result)
         _draw_steps(surface, steps_rect, fonts, [], 0)
@@ -103,6 +112,7 @@ def draw_derivation(surface, rect, fonts, result, step_index):
             anchor='topright'
         )
 
+    # a árvore ocupa o espaço entre a forma sentencial e a linha de atalhos
     area = pygame.Rect(tree_rect.x, tree_rect.y + 80, tree_rect.width, tree_rect.height - 110).inflate(-40, -40)
     draw_tree(surface, area, fonts, result['tree'], result['layout'], step)
 
@@ -112,6 +122,7 @@ def draw_derivation(surface, rect, fonts, result, step_index):
     _draw_steps(surface, steps_rect, fonts, result['steps'], step_index)
 
 
+# mensagem centralizada explicando por que a sentença foi rejeitada
 def _draw_rejected(surface, rect, fonts, result):
 
     center_x = rect.centerx
@@ -140,11 +151,13 @@ def draw_tree(surface, rect, fonts, tree, layout, step):
     y_unit = min(100, rect.height / max(layout['depth'], 1))
     radius = int(max(12, min(24, x_unit * 0.33, y_unit * 0.3)))
 
+    # centraliza a árvore no retângulo
     tree_width = (layout['width'] - 1) * x_unit
     tree_height = layout['depth'] * y_unit
     offset_x = rect.centerx - tree_width / 2
     offset_y = rect.centery - tree_height / 2
 
+    # converte a posição abstrata do nó em pixels
     def point(node):
         x, y = positions[node.id]
         return int(offset_x + x * x_unit), int(offset_y + y * y_unit)
@@ -156,6 +169,7 @@ def draw_tree(surface, rect, fonts, tree, layout, step):
             if node.id in visible and child.id in visible:
                 pygame.draw.line(surface, COLORS['edge'], point(node), point(child), 2)
 
+    # cor do nó: amarelo = expandido agora, azul = terminal, cinza = ε, branco = variável
     for node in nodes:
         if node.id not in visible:
             continue
@@ -173,6 +187,7 @@ def draw_tree(surface, rect, fonts, tree, layout, step):
         draw_text(surface, fonts['node'], node.symbol, center, anchor='center')
 
 
+# lista todos os nós da árvore (a ordem não importa pro desenho)
 def _all_nodes(tree):
 
     nodes = []
@@ -194,6 +209,7 @@ def _draw_steps(surface, rect, fonts, steps, step_index):
         draw_text(surface, fonts['body'], 'sem derivação', (rect.x + 16, rect.y + 50), COLORS['muted'])
         return
 
+    # quantas linhas cabem no painel
     line_height = 44
     list_top = rect.y + 48
     visible_count = max(1, (rect.bottom - list_top - 10) // line_height)
@@ -206,6 +222,7 @@ def _draw_steps(surface, rect, fonts, steps, step_index):
         step = steps[index]
         row = pygame.Rect(rect.x + 8, list_top + (index - first) * line_height, rect.width - 16, line_height - 4)
 
+        # passo atual destacado e passos futuros em cinza
         if index == step_index:
             pygame.draw.rect(surface, COLORS['highlight'], row, border_radius=6)
 
@@ -225,11 +242,13 @@ def draw_cyk_table(surface, rect, fonts, result):
     title = f'Tabela CYK de "{word or "ε"}"'
     draw_text(surface, fonts['subtitle'], title, (rect.x + 20, rect.y + 16))
 
+    # palavra vazia ou com símbolo inválido não chega a montar tabela
     if result['reason'] == 'invalid_symbol' or not word:
         message = REASONS.get(result['reason']) or 'a sentença vazia é aceita direto por S → ε'
         draw_text(surface, fonts['body'], message, rect.center, COLORS['muted'], 'center')
         return
 
+    # tamanho das células conforme o espaço e o tamanho da palavra, tabela centralizada
     table = result['table']
     n = len(word)
     area = pygame.Rect(rect.x + 60, rect.y + 60, rect.width - 100, rect.height - 120)
@@ -241,6 +260,7 @@ def draw_cyk_table(surface, rect, fonts, result):
     for length in range(1, n + 1):
         for start in range(n - length + 1):
 
+            # quanto maior o trecho, mais alta a linha (a de tamanho n fica no topo)
             cell = pygame.Rect(left + start * cell_width, bottom - length * cell_height, cell_width, cell_height)
             variables = table[length - 1][start]
 
@@ -250,6 +270,7 @@ def draw_cyk_table(surface, rect, fonts, result):
                 fill = COLORS['accept_soft'] if accepted else COLORS['reject_soft']
                 pygame.draw.rect(surface, fill, cell)
 
+            # ∅ quando nenhuma variável gera aquele trecho
             pygame.draw.rect(surface, COLORS['border'], cell, 1)
             text = ', '.join(variables) if variables else '∅'
             color = COLORS['text'] if variables else COLORS['muted']
@@ -273,5 +294,6 @@ def draw_cyk_table(surface, rect, fonts, result):
     draw_text(surface, fonts['small'], caption, (rect.centerx, rect.bottom - 22), COLORS['muted'], 'center')
 
 
+# usa a fonte menor quando o texto não cabe na célula
 def _fit_font(fonts, text, width):
     return fonts['body'] if fonts['body'].size(text)[0] <= width else fonts['small']

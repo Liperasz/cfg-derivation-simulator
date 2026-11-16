@@ -5,11 +5,13 @@ import sys
 from app import App
 from simulator import Simulator
 
+# caminhos relativos ao arquivo, assim o programa roda de qualquer pasta
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_GRAMMAR = os.path.join(BASE_DIR, 'data', 'grammar.json')
 DEFAULT_INPUT = os.path.join(BASE_DIR, 'data', 'input.txt')
 
 
+# argumentos opcionais: sem eles usa a gramática e as sentenças da pasta data
 def parse_args():
 
     parser = argparse.ArgumentParser(description='Simulador de derivação de uma GLC na Forma Normal de Chomsky')

@@ -20,6 +20,7 @@ class Grammar:
             for variable, bodies in productions.items()
         }
 
+    # "aAc" vira ('a', 'A', 'c'), já que cada símbolo tem um caractere
     @staticmethod
     def _parse_body(body):
         return () if body == EPSILON else tuple(body)
@@ -48,6 +49,7 @@ class Grammar:
             if len(symbol) != 1:
                 errors.append(f'O símbolo {symbol!r} não tem exatamente um caractere')
 
+        # um mesmo símbolo não pode ser variável e terminal
         overlap = set(self.variables) & set(self.terminals)
         if overlap:
             errors.append(f'Símbolos usados como variável e terminal: {sorted(overlap)}')
@@ -72,6 +74,7 @@ class Grammar:
     # verifica se está na FNC: A → BC, A → a, e S → ε só se S não aparece à direita
     def is_cnf(self):
 
+        # S → ε só é permitido se S não aparecer no lado direito de nenhuma produção
         start_on_right = any(
             self.start in body
             for bodies in self.productions.values()
@@ -81,18 +84,22 @@ class Grammar:
         for variable, bodies in self.productions.items():
             for body in bodies:
 
+                # produção vazia
                 if len(body) == 0:
                     if variable != self.start or start_on_right:
                         return False
 
+                # A → a
                 elif len(body) == 1:
                     if body[0] not in self.terminals:
                         return False
 
+                # A → BC
                 elif len(body) == 2:
                     if body[0] not in self.variables or body[1] not in self.variables:
                         return False
 
+                # três ou mais símbolos nunca estão na FNC
                 else:
                     return False
 

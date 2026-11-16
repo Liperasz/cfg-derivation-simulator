@@ -46,6 +46,7 @@ def parse(grammar, word):
 # table[length - 1][start] = {variável: backpointer}, só o primeiro backpointer achado
 def _fill_table(grammar, word):
 
+    # cada linha tem uma célula a menos que a anterior (tabela triangular)
     n = len(word)
     table = [[{} for _ in range(n - length + 1)] for length in range(1, n + 1)]
 
@@ -63,6 +64,7 @@ def _fill_table(grammar, word):
             for variable in grammar.variables:
                 for body in grammar.productions.get(variable, []):
 
+                    # ignora A → a e variável que já foi achada nessa célula
                     if len(body) != 2 or variable in cell:
                         continue
 
@@ -83,9 +85,11 @@ def _build_tree(table, variable, start, length):
 
     pointer = table[length - 1][start][variable]
 
+    # A → a vira o nó com a folha do terminal
     if pointer[0] == 'terminal':
         return Node(variable, [Node(pointer[1])])
 
+    # A → BC monta as duas subárvores, cada uma no seu pedaço da palavra
     _, body, left_length = pointer
     left = _build_tree(table, body[0], start, left_length)
     right = _build_tree(table, body[1], start + left_length, length - left_length)
